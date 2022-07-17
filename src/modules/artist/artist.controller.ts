@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Header, HttpCode, HttpStatus, Param, Post, Put, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Header, HttpCode, HttpStatus, Param, Post, Put, Req, Res, HttpException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Request, Response } from 'express';
@@ -22,25 +22,35 @@ export class ArtistController {
     // }
 
     @Get(':id')
-    getById(@Param('id') id: string): CreateArtistDto {
-        return this.artistService.getById(id);
+    @HttpCode(HttpStatus.OK)
+    getById(@Param('id') id: string): CreateArtistDto | number {
+        const result: CreateArtistDto | number = this.artistService.getById(id);
+        if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+        if(result) return result;
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
     // @Header('Cache-Control', 'none')
     create(@Body() CreateArtistDto: CreateArtistDto) {
-        this.artistService.create(CreateArtistDto);
-        return `name = ${CreateArtistDto.name} grammy = ${CreateArtistDto.grammy} created`; 
+       const result: CreateArtistDto | number = this.artistService.create(CreateArtistDto);  
+       if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+       if(result) return result;       
     }
 
     @Put(':id')
     update(@Body() UpdateArtistDto: UpdateArtistDto, @Param('id') id: string) {
-        return `id = ${id} name = ${UpdateArtistDto.name} grammy = ${UpdateArtistDto.grammy}`; 
+        const result: CreateArtistDto | number =  this.artistService.update(UpdateArtistDto, id);
+        if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+        if(result) return result;
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
     
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return 'remove ' + id; 
-    }
+    delete(@Param('id') id: string) {
+        const result: string | number =  this.artistService.delete(id);
+        if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+        if(result) return result;
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND);    }
 }
