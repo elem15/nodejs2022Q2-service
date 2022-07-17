@@ -14,21 +14,28 @@ export class FavoritesService {
     }
 
     getAll(): FavoritesResponseDto {
-        return {
-            artists: this.favorites.artists.map(id => data.artists.find(artist => artist.id === id)),
+        const artists = [123,];
+        for (const id of this.favorites.artists) {
+            const artist = data.artists.find(artist => artist.id === id);
+            if(artist) {
+                artists.push(artist);
+            }
+        }
+        const result = {
+            artists: artists,
             albums: this.favorites.albums.map(id => data.albums.find(album => album.id === id)),
             tracks: this.favorites.tracks.map(id => data.tracks.find(track => track.id === id)),
-        } ;
+        };
+        return result
     }
 
-    // create(artistDto: CreateArtistDto) {
-    //     const artist = {...artistDto, id: uuidv4()};
-    //     if((typeof artistDto.name !== 'string') || (typeof artistDto.grammy !== 'boolean')
-    //         ) return -1; 
-         
-    //     this.artists.push(artist);
-    //     return artist;
-    // }
+    createTrack(id: string): number {
+        if(!validate(id)) return 400;
+        const track = data.tracks.find(track => track.id === id);
+        if(track === -1) return 422;
+        data.tracks.push(id);
+        return 201;
+    }
 
     // delete(id: string) {
     //     if(!validate(id)) return -1;   

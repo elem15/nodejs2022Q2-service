@@ -12,14 +12,14 @@ export class FavoritesController {
         return this.favoritesService.getAll();
     }
  
-    // @Post()
-    // @HttpCode(HttpStatus.CREATED)
-    // // @Header('Cache-Control', 'none')
-    // create(@Body() CreateArtistDto: CreateArtistDto) {
-    //    const result: CreateArtistDto | number = this.artistService.create(CreateArtistDto);  
-    //    if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
-    //    if(result) return result;       
-    // }
+    @Post('artist/:id')
+    @HttpCode(HttpStatus.CREATED)
+    create(@Param('id') id: string) {
+       const result: number = this.favoritesService.createTrack(id);  
+       if (result === 201) return 'Favorite track was added';
+       if (result === 400) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+       if (result === 422) throw new HttpException("Track doesn't exist", HttpStatus.UNPROCESSABLE_ENTITY);
+    }
     
     // @Delete(':id')
     // @HttpCode(HttpStatus.NO_CONTENT)
