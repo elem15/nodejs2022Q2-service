@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, Header, HttpCode, HttpStatus, Param, Post, Put, Req, Res, HttpException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, HttpException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { Request, Response } from 'express';
 import { ArtistService } from './artist.service';
 
 @Controller('artist')
@@ -48,9 +47,11 @@ export class ArtistController {
     }
     
     @Delete(':id')
+    @HttpCode(HttpStatus.NO_CONTENT)
     delete(@Param('id') id: string) {
         const result: string | number =  this.artistService.delete(id);
         if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         if(result) return result;
-        throw new HttpException('Not found', HttpStatus.NOT_FOUND);    }
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND);    
+    }
 }
