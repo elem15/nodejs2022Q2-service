@@ -70,3 +70,35 @@ npm run format
 Press <kbd>F5</kbd> to debug.
 
 For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+
+
+## Use
+You can run Postman and manual test all requests. For example: 
+POST to localhost:3000/artist with body: 
+{
+    "name": "Jan",
+    "grammy": true   
+} 
+created artist with name "Jan"
+then you can get all users with 
+GET to localhost:3000/artist
+then copy "Jan" id from response and create new request 
+GET to localhost:3000/artist/id
+So you can work with every entities.
+
+To create user -
+POST to localhost:3000/user with body: 
+{
+    "name": "Jan",
+    "password": "12345"
+} 
+To get users with id's - 
+GET to localhost:3000/user
+To update password -
+PUT to localhost:3000/user/id with body:
+{
+    "oldPassword": "12345",
+    "newPassword": "54321"
+}
+
+Enjoy this program!
