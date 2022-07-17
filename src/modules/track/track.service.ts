@@ -2,10 +2,11 @@ import { Injectable, HttpCode, HttpStatus } from "@nestjs/common"
 import { CreateTrackDto } from "./dto/create-track.dto";
 import {v4 as uuidv4, validate} from 'uuid';
 import { UpdateTrackDto } from "./dto/update-track.dto";
+import data from '../../data'
 
 @Injectable()
 export class TrackService {
-    private tracks: CreateTrackDto[] = []
+    private tracks: CreateTrackDto[] = data.tracks
 
     getAll() {
         return this.tracks;

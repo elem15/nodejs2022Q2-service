@@ -4,10 +4,11 @@ import { SafeUserDto } from "./dto/safe-user.dto";
 import { UserDto } from "./dto/user.dto";
 import { v4 as uuidv4, validate } from 'uuid';
 import { UpdatePasswordDto } from "./dto/update-password.dto";
+import data from '../../data'
 
 @Injectable()
 export class UserService {
-    private users: UserDto[] = []
+    private users: UserDto[] = data.users
 
     createSafeUser(user: UserDto): SafeUserDto {
         const safeUser = JSON.parse(JSON.stringify(user));

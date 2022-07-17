@@ -2,10 +2,11 @@ import { Injectable, HttpCode, HttpStatus } from "@nestjs/common"
 import { CreateAlbumDto } from "./dto/create-album.dto";
 import {v4 as uuidv4, validate} from 'uuid';
 import { UpdateAlbumDto } from "./dto/update-album.dto";
+import data from '../../data'
 
 @Injectable()
 export class AlbumService {
-    private albums: CreateAlbumDto[] = []
+    private albums: CreateAlbumDto[] = data.albums
 
     getAll() {
         return this.albums;
