@@ -1,16 +1,16 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, HttpException } from '@nestjs/common';
-import { CreateArtistDto } from './dto/create-artist.dto';
-import { UpdateArtistDto } from './dto/update-artist.dto';
-import { ArtistService } from './artist.service';
+import { CreateTrackDto } from './dto/create-track.dto';
+import { UpdateTrackDto } from './dto/update-track.dto';
+import { TrackService } from './track.service';
 
-@Controller('artist')
-export class ArtistController {
+@Controller('track')
+export class TrackController {
 
-    constructor(private readonly artistService: ArtistService) {}
+    constructor(private readonly trackService: TrackService) {}
 
     @Get()
-    getAll(): CreateArtistDto[] { 
-        return this.artistService.getAll();
+    getAll(): CreateTrackDto[] { 
+        return this.trackService.getAll();
     }
     // @Get()
     // getAll(@Req() req: Request, @Res() res: Response): string {
@@ -20,8 +20,8 @@ export class ArtistController {
 
     @Get(':id')
     @HttpCode(HttpStatus.OK)
-    getById(@Param('id') id: string): CreateArtistDto | number {
-        const result: CreateArtistDto | number = this.artistService.getById(id);
+    getById(@Param('id') id: string): CreateTrackDto | number {
+        const result: CreateTrackDto | number = this.trackService.getById(id);
         if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         if(result) return result;
         throw new HttpException('Not found', HttpStatus.NOT_FOUND);
@@ -30,15 +30,15 @@ export class ArtistController {
     @Post()
     @HttpCode(HttpStatus.CREATED)
     // @Header('Cache-Control', 'none')
-    create(@Body() CreateArtistDto: CreateArtistDto) {
-       const result: CreateArtistDto | number = this.artistService.create(CreateArtistDto);  
+    create(@Body() CreateTrackDto: CreateTrackDto) {
+       const result: CreateTrackDto | number = this.trackService.create(CreateTrackDto);  
        if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
        if(result) return result;       
     }
 
     @Put(':id')
-    update(@Body() UpdateArtistDto: UpdateArtistDto, @Param('id') id: string) {
-        const result: CreateArtistDto | number =  this.artistService.update(UpdateArtistDto, id);
+    update(@Body()UpdateTrackDto: UpdateTrackDto, @Param('id') id: string) {
+        const result: CreateTrackDto | number =  this.trackService.update(UpdateTrackDto, id);
         if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         if(result) return result;
         throw new HttpException('Not found', HttpStatus.NOT_FOUND);
@@ -47,7 +47,7 @@ export class ArtistController {
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     delete(@Param('id') id: string) {
-        const result: string | number =  this.artistService.delete(id);
+        const result: string | number =  this.trackService.delete(id);
         if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         if(result) return result;
         throw new HttpException('Not found', HttpStatus.NOT_FOUND);    
