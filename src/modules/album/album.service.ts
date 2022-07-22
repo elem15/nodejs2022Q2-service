@@ -1,20 +1,27 @@
-import { Injectable, HttpCode, HttpStatus } from "@nestjs/common"
+import { Injectable, HttpCode, HttpStatus, forwardRef, Inject } from "@nestjs/common"
 import { CreateAlbumDto } from "./dto/create-album.dto";
 import {v4 as uuidv4, validate} from 'uuid';
 import { UpdateAlbumDto } from "./dto/update-album.dto";
-import data from '../../data'
+import { FavoritesService } from "../favorites/favorites.service";
+import { TrackService } from "../track/track.service";
+import data from '../../data';
+let { albums } = data;
 
 @Injectable()
 export class AlbumService {
-    private albums: CreateAlbumDto[] = data.albums
+    constructor(
+        @Inject(forwardRef(() => FavoritesService))
+        private readonly favoritesService: FavoritesService,    
+        private readonly trackService: TrackService,
+      ) {}
 
     getAll() {
-        return this.albums;
+        return albums;
     }
 
     getById(id: string) {
         if(!validate(id)) return -1;       
-        const neededAlbums: CreateAlbumDto[] = this.albums.filter(album => album.id === id); 
+        const neededAlbums: CreateAlbumDto[] = albums.filter(album => album.id === id); 
         if(neededAlbums.length) return neededAlbums[0]; 
         return null;
     }
@@ -24,7 +31,7 @@ export class AlbumService {
         if((typeof albumDto.name !== 'string') || (typeof albumDto.year !== 'number')
             ) return -1; 
          
-        this.albums.push(album);
+        albums.push(album);
         return album;
     }
 
@@ -35,7 +42,7 @@ export class AlbumService {
             || (typeof albumDto.year !== 'number')
             ) return -1; 
 
-        const changedAlbums: CreateAlbumDto[] = this.albums.filter(album => album.id === id); 
+        const changedAlbums: CreateAlbumDto[] = albums.filter(album => album.id === id); 
         if(changedAlbums.length) {
             let changedAlbum= changedAlbums[0];
             changedAlbum= {...changedAlbum, ...albumDto};
@@ -44,11 +51,18 @@ export class AlbumService {
         return null;
     }
 
-    delete(id: string) {
+    async delete(id: string): Promise<number | string> {
         if(!validate(id)) return -1;   
-        const length = this.albums.length;    
-        this.albums = this.albums.filter(album => album.id !== id); 
-        if(this.albums.length === length) return null; 
+        const length = albums.length;    
+        albums = albums.filter(album => album.id !== id); 
+        if(albums.length === length) return null; 
+        await this.favoritesService.deleteAlbumFromFavorites(id);
+        await this.trackService.deleteAlbumFromTracks(id);
         return 'deleted';
     }
+
+    deleteArtistFromAlbums(id: string) {
+        for (const album of albums)
+          if (album.artistId === id) album.artistId = null;
+      }
 }

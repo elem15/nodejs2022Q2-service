@@ -1,20 +1,31 @@
-import { Injectable, HttpCode, HttpStatus } from "@nestjs/common"
-import { CreateTrackDto } from "./dto/create-track.dto";
+import {
+    BadRequestException,
+    forwardRef,
+    Inject,
+    Injectable,
+    NotFoundException,
+  } from '@nestjs/common';
 import {v4 as uuidv4, validate} from 'uuid';
+import { CreateTrackDto } from "./dto/create-track.dto";
 import { UpdateTrackDto } from "./dto/update-track.dto";
-import data from '../../data'
+import data from '../../data';
+import { FavoritesService } from '../favorites/favorites.service';
+let { tracks } = data;
 
 @Injectable()
 export class TrackService {
-    private tracks: CreateTrackDto[] = data.tracks
+    constructor(
+        @Inject(forwardRef(() => FavoritesService))
+        private readonly favoritesService: FavoritesService,
+      ) {}
 
     getAll() {
-        return this.tracks;
+        return tracks;
     }
 
     getById(id: string) {
         if(!validate(id)) return -1;       
-        const neededTracks: CreateTrackDto[] = this.tracks.filter(track => track.id === id); 
+        const neededTracks: CreateTrackDto[] = tracks.filter(track => track.id === id); 
         if(neededTracks.length) return neededTracks[0]; 
         return null;
     }
@@ -23,7 +34,7 @@ export class TrackService {
         const track = {...trackDto, id: uuidv4()};
         if((typeof trackDto.name !== 'string') || (typeof trackDto.duration !== 'number')
             ) return -1;          
-        this.tracks.push(track);
+        tracks.push(track);
         return track;
     }
 
@@ -34,7 +45,7 @@ export class TrackService {
             || (typeof trackDto.duration !== 'number')
             ) return -1; 
 
-        const changedTracks: CreateTrackDto[] = this.tracks.filter(track => track.id === id); 
+        const changedTracks: CreateTrackDto[] = tracks.filter(track => track.id === id); 
         if(changedTracks.length) {
             let changedTrack = changedTracks[0];
             changedTrack = {...changedTrack, ...trackDto};
@@ -43,11 +54,22 @@ export class TrackService {
         return null;
     }
 
-    delete(id: string) {
+    async delete(id: string) {
         if(!validate(id)) return -1;   
-        const length = this.tracks.length;    
-        this.tracks = this.tracks.filter(track => track.id !== id); 
-        if(this.tracks.length === length) return null; 
+        const length = tracks.length;    
+        tracks = tracks.filter(track => track.id !== id); 
+        if(tracks.length === length) return null; 
+        await this.favoritesService.deleteTrackFromFavorites(id);
         return 'deleted';
+    }
+
+    deleteArtistFromTracks(id: string) {
+        for (const track of tracks)
+            if (track.artistId === id) track.artistId = null;
+    }
+
+    deleteAlbumFromTracks(id: string) {
+        for (const track of tracks)
+            if (track.albumId === id) track.albumId = null;
     }
 }

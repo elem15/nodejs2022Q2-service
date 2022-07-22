@@ -12,11 +12,6 @@ export class ArtistController {
     getAll(): CreateArtistDto[] { 
         return this.artistService.getAll();
     }
-    // @Get()
-    // getAll(@Req() req: Request, @Res() res: Response): string {
-    //     res.status(200).end('Bay');
-    //     return 'getAll';
-    // }
 
     @Get(':id')
     @HttpCode(HttpStatus.OK)
@@ -29,7 +24,6 @@ export class ArtistController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    // @Header('Cache-Control', 'none')
     create(@Body() CreateArtistDto: CreateArtistDto) {
        const result: CreateArtistDto | number = this.artistService.create(CreateArtistDto);  
        if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
@@ -46,8 +40,8 @@ export class ArtistController {
     
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    delete(@Param('id') id: string) {
-        const result: string | number =  this.artistService.delete(id);
+    async delete(@Param('id') id: string) {
+        const result: string | number = await this.artistService.delete(id);
         if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         if(result) return result;
         throw new HttpException('Not found', HttpStatus.NOT_FOUND);    

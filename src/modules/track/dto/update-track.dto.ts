@@ -1,6 +1,12 @@
-export interface UpdateTrackDto { 
-    name: string;
-    artistId: string | null; // refers to Artist
-    albumId: string | null; // refers to Album
-    duration: number; // integer number
-  }
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+
+export class UpdateTrackDto {
+  @IsNotEmpty({ message: 'The required name field is missing' })
+  @IsString()
+  name: string;
+  artistId: string | null;
+  albumId: string | null;
+  @IsNotEmpty({ message: 'The required duration field is missing' })
+  @IsNumber()
+  duration: number;
+}

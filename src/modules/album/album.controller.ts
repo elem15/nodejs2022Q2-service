@@ -23,7 +23,6 @@ export class AlbumController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    // @Header('Cache-Control', 'none')
     create(@Body() CreateAlbumDto: CreateAlbumDto) {
        const result: CreateAlbumDto | number = this.albumService.create(CreateAlbumDto);  
        if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
@@ -40,10 +39,10 @@ export class AlbumController {
     
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    delete(@Param('id') id: string) {
-        const result: string | number =  this.albumService.delete(id);
-        if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
-        if(result) return result;
+    async delete(@Param('id') id: string): Promise<string | number> {
+        const result = await this.albumService.delete(id);
+        if (await result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+        if(result) return await result;
         throw new HttpException('Not found', HttpStatus.NOT_FOUND);    
     }
 }

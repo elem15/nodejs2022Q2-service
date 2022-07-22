@@ -1,20 +1,38 @@
-import { Injectable, HttpCode, HttpStatus } from "@nestjs/common"
+import {
+    BadRequestException,
+    forwardRef,
+    Inject,
+    Injectable,
+    NotFoundException,
+  } from '@nestjs/common';
 import { CreateArtistDto } from "./dto/create-artist.dto";
 import {v4 as uuidv4, validate} from 'uuid';
 import { UpdateArtistDto } from "./dto/update-artist.dto";
-import data from '../../data'
+import { FavoritesService } from '../favorites/favorites.service';
+import { TrackService } from '../track/track.service';
+import { AlbumService } from '../album/album.service';
+import data from '../../data';
+let { artists } = data;
+
 
 @Injectable()
 export class ArtistService {
-    private artists: CreateArtistDto[] = data.artists
+    constructor(
+        @Inject(forwardRef(() => FavoritesService))
+        private readonly favoritesService: FavoritesService,
+    
+        private readonly trackService: TrackService,
+    
+        private readonly albumService: AlbumService,
+      ) {}
 
-    getAll() {
-        return this.artists;
+    getAll(): CreateArtistDto[] {
+        return artists;
     }
 
     getById(id: string) {
         if(!validate(id)) return -1;       
-        const neededArtists: CreateArtistDto[] = this.artists.filter(artist => artist.id === id); 
+        const neededArtists: CreateArtistDto[] = artists.filter(artist => artist.id === id); 
         if(neededArtists.length) return neededArtists[0]; 
         return null;
     }
@@ -24,7 +42,7 @@ export class ArtistService {
         if((typeof artistDto.name !== 'string') || (typeof artistDto.grammy !== 'boolean')
             ) return -1; 
          
-        this.artists.push(artist);
+        artists.push(artist);
         return artist;
     }
 
@@ -35,7 +53,7 @@ export class ArtistService {
             || (typeof artistDto.grammy !== 'boolean')
             ) return -1; 
 
-        const changedArtists: CreateArtistDto[] = this.artists.filter(artist => artist.id === id); 
+        const changedArtists: CreateArtistDto[] = artists.filter(artist => artist.id === id); 
         if(changedArtists.length) {
             let changedArtist = changedArtists[0];
             changedArtist = {...changedArtist, ...artistDto};
@@ -44,11 +62,17 @@ export class ArtistService {
         return null;
     }
 
-    delete(id: string) {
+    async delete(id: string) {
         if(!validate(id)) return -1;   
-        const length = this.artists.length;    
-        this.artists = this.artists.filter(artist => artist.id !== id); 
-        if(this.artists.length === length) return null; 
+        const length = artists.length;    
+        artists = artists.filter(artist => artist.id !== id); 
+        // const idx = artists.findIndex((a) => a.id == id);
+        // artists.splice(idx, 1)
+        if(artists.length === length) return null; 
+        await this.favoritesService.deleteArtistFromFavorites(id);
+        this.albumService.deleteArtistFromAlbums(id);
+        this.trackService.deleteArtistFromTracks(id);
+
         return 'deleted';
     }
 }

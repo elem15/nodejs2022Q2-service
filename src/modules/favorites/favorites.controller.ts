@@ -1,33 +1,53 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, HttpException } from '@nestjs/common';
-import { FavoritesResponseDto } from './dto/favorites-response.dto';
-import { FavoritesRequestDto } from './dto/favorites-request.dto';
-import { FavoritesService } from './favorites.service';
+import {
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    HttpStatus,
+    Param,
+    Post,
+  } from '@nestjs/common';
+  import { UpdateAlbumDto } from '../album/dto/update-album.dto';
+  import { CreateArtistDto } from '../artist/dto/create-artist.dto'; 
+  import { UpdateTrackDto } from '../track/dto/update-track.dto'; 
+  import { FavoritesResponseDto } from './dto/favorites-response.dto'; 
+  import { FavoritesService } from './favorites.service';    
 
-@Controller('favs')
-export class FavoritesController {
+  @Controller('favs')
+  export class FavoritesController {
     constructor(private readonly favoritesService: FavoritesService) {}
-
+  
     @Get()
-    getAll(): FavoritesResponseDto { 
-        return this.favoritesService.getAll();
+    getAll(): Promise<FavoritesResponseDto> {
+      return this.favoritesService.getAll();
     }
- 
-    @Post('artist/:id')
-    @HttpCode(HttpStatus.CREATED)
-    create(@Param('id') id: string) {
-       const result: number = this.favoritesService.createTrack(id);  
-       if (result === 201) return 'Favorite track was added';
-       if (result === 400) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
-       if (result === 422) throw new HttpException("Track doesn't exist", HttpStatus.UNPROCESSABLE_ENTITY);
+  
+    @Post('/track/:id')
+    addTrackToFavorites(@Param('id') id): UpdateTrackDto | -1 {
+      return this.favoritesService.addTrackToFavorites(id);
     }
-    
-    // @Delete(':id')
-    // @HttpCode(HttpStatus.NO_CONTENT)
-    // delete(@Param('id') id: string) {
-    //     const result: string | number =  this.artistService.delete(id);
-    //     if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
-    //     if(result) return result;
-    //     throw new HttpException('Not found', HttpStatus.NOT_FOUND);    
-    // }
-
-}
+    @Delete('/track/:id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async deleteTrackFromFavorites(@Param('id') id) {
+      await this.favoritesService.deleteTrackFromFavorites(id);
+    }
+    @Post('/album/:id')
+    addAlbumToFavorites(@Param('id') id): UpdateAlbumDto | -1 {
+      return this.favoritesService.addAlbumToFavorites(id);
+    }
+    @Delete('/album/:id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async deleteAlbumFromFavorites(@Param('id') id) {
+      await this.favoritesService.deleteAlbumFromFavorites(id);
+    }
+    @Post('/artist/:id')
+    addArtistToFavorites(@Param('id') id): Promise<CreateArtistDto | -1> {
+      return this.favoritesService.addArtistToFavorites(id);
+    }
+    @Delete('/artist/:id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async deleteArtistFromFavorites(@Param('id') id) {
+      await this.favoritesService.deleteArtistFromFavorites(id);
+    }
+  }
+  
