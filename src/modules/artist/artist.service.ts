@@ -10,10 +10,9 @@ import {v4 as uuidv4, validate} from 'uuid';
 import { UpdateArtistDto } from "./dto/update-artist.dto";
 import { FavoritesService } from '../favorites/favorites.service';
 import { TrackService } from '../track/track.service';
-import { AlbumService } from '../album/album.service';
 import data from '../../data';
+import { AlbumService } from '../album/album.service';
 let { artists } = data;
-
 
 @Injectable()
 export class ArtistService {
@@ -66,8 +65,6 @@ export class ArtistService {
         if(!validate(id)) return -1;   
         const length = artists.length;    
         artists = artists.filter(artist => artist.id !== id); 
-        // const idx = artists.findIndex((a) => a.id == id);
-        // artists.splice(idx, 1)
         if(artists.length === length) return null; 
         await this.favoritesService.deleteArtistFromFavorites(id);
         this.albumService.deleteArtistFromAlbums(id);

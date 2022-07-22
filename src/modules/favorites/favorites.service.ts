@@ -75,20 +75,19 @@ export class FavoritesService {
     async addArtistToFavorites(id: string): Promise<CreateArtistDto | -1> {
         if (!validate(id)) throw new BadRequestException('Invalid UUID');
         // if (artists.findIndex((i) => i.id === id) === -1)
-        const artist = this.artistService.getById(id);
+        const artist = await this.artistService.getById(id);
         favorites.artists.push(id);
-        // const idx = artists.findIndex(artist => artist.id === id);
         //     throw new UnprocessableEntityException();
         // const artistsEmpty = artists.filter(artist => artist.id !== id); 
         // if(artistsEmpty.length === artists.length) throw new UnprocessableEntityException();
-        // return artists[idx];
-        return artist
+        return artist;
     }
     async deleteArtistFromFavorites(id: string) {
         if (!validate(id)) throw new BadRequestException('Invalid UUID');
         const idx = favorites.artists.findIndex((i) => i == id);
         // if (idx === -1) throw new NotFoundException();
-        if (idx !== -1) favorites.artists.splice(idx, 1);
+        // if (idx !== -1) 
+        await favorites.artists.splice(idx, 1);
         // else throw new NotFoundException();
     }
 }
