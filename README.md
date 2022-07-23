@@ -112,15 +112,15 @@ Install Docker
 Use separate app & database:
 1
 Node app:
-Download image elem/nodejs-service
+Download image: docker pull elem15ten/nodejs-service:latest
 Run command to create volumes: docker volume create db-data
                                 docker volume create db-logs
-Run command: docker run -p 4000:4000  -v db-data:/database -v db-log:/database-logs elem/nodejs-service npm run start:dev
+Run command: docker run -p 4000:4000  -v db-data:/database -v db-log:/database-logs elem15ten/nodejs-service npm run start:dev
 Now you can use service with auto test - "npm test" or with swagger on address http://localhost:4000/api/
 2
 Postgres:
-Download image elem/nodejs-service-postgres
-Run command: docker run -e POSTGRES_PASSWORD=password  -p 4040:4000 elem/nodejs-service-postgres
+Create database image: docker build ./database -t elem/nodejs-service-postgres
+Run command: docker run -e POSTGRES_PASSWORD=password  -p 4040:4000 elem15ten/nodejs-service-postgres
 
 Use with docker compose:
 

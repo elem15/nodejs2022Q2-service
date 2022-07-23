@@ -4,6 +4,8 @@ services:
   node:   
     build: .
     restart: always
+    container_name: nodejs-service
+    hostname: elem15ten
     command: npm run start:dev
     ports:
       - ${PORT}:${PORT}
@@ -14,6 +16,8 @@ services:
   postgres:
     build: ./database/
     restart: always
+    container_name: nodejs-service-postgres
+    hostname: elem15ten
     volumes:
       - db-data:/database
       - db-logs:/database-logs
