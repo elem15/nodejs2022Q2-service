@@ -15,8 +15,8 @@ services:
     build: ./database/
     restart: always
     volumes:
-      - ./:/src/
-      - nodemodules:/node_modules
+      - db-data:/database
+      - db-logs:/database-logs
     ports: 
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
@@ -24,4 +24,5 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
 volumes:
-    nodemodules: {}
+    db-data: {}
+    db-logs: {}
