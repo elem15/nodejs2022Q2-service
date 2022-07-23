@@ -102,3 +102,7 @@ PUT to localhost:3000/user/id with body:
 }
 
 Enjoy this program!
+
+#Use with Docker
+
+Install Docker
