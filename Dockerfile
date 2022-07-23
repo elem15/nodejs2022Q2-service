@@ -1,8 +1,10 @@
-FROM node:16.14-alpine3.15
-WORKDIR /the/workdir/path
+FROM node:16-alpine
+WORKDIR /src
+ADD package.json /src 
 COPY package*.json .
-RUN npm install
+RUN npm i --silent
+ADD . /src 
 COPY . .
 EXPOSE ${PORT}
-CMD [ "npm", "run", "start:prod" ]
+CMD [ "npm", "start" ]
 

@@ -3,6 +3,8 @@ version: "3"
 services:
   node:   
     build: .
+    restart: always
+    command: npm run start:dev
     ports:
       - ${PORT}:${PORT}
     depends_on:
@@ -11,9 +13,15 @@ services:
       - PORT=4000
   postgres:
     build: ./database/
+    restart: always
+    volumes:
+      - ./:/src/
+      - nodemodules:/node_modules
     ports: 
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+volumes:
+    nodemodules: {}

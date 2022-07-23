@@ -4,7 +4,7 @@ import { dirname, join } from 'path';
 import { readFile } from 'fs/promises';
 import { SwaggerModule } from '@nestjs/swagger';
 import { parse } from 'yaml';
-import { ValidationPipe } from '@nestjs/common';
+// import { ValidationPipe } from '@nestjs/common';
 
 import 'dotenv/config'
 

@@ -112,18 +112,31 @@ Install Docker
 Use separate app & database:
 1
 Node app:
-Download image elem/nodejs-service.
-Run command: docker run -p 4000:4000 elem/nodejs-service.
-Now you can use service with auto test - "npm test" or with swagger on address http://localhost:4000/api/.
+Download image elem/nodejs-service
+Run command: docker volume create --name nodemodules
+Run command: docker run -p 4000:4000  -v nodemodules:/src/node_modules elem/nodejs-service npm run start:dev
+Now you can use service with auto test - "npm test" or with swagger on address http://localhost:4000/api/
 2
 Postgres:
-Download image elem/nodejs-service-postgres.
+Download image elem/nodejs-service-postgres
 Run command: docker run -e POSTGRES_PASSWORD=password  -p 4040:4000 elem/nodejs-service-postgres
 
 Use with docker compose:
 
-Run command: docker-compose up.
+Run command: docker-compose up --build
 Now both services are running.
 
+To scan images for security vulnerabilities:
+Check version with: docker scan --accept-license --version
+Auth in docker hub with VS code extension 
+Login in terminal: docker login -u username
+password: Enter you docker password
+Scan image: docker scan --file Dockerfile docker-scan:e2e 
+
+To create your bridge run: docker network create my-net
+Run image docker-compose up 
+To connect you container with bright: docker network connect my-net [CONTAINER-ID] (get container id with command: docker ps)
+To disconnect you container from bridge: docker network disconnect my-net [CONTAINER-ID]
+To remove bridge: docker network rm my-net
 
 
