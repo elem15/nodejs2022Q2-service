@@ -102,7 +102,28 @@ PUT to localhost:3000/user/id with body:
 }
 
 Enjoy this program!
+_____________________________
+Part 2
 
 #Use with Docker
 
 Install Docker
+
+Use separate app & database:
+1
+Node app:
+Download image elem/nodejs-service.
+Run command: docker run -p 4000:4000 elem/nodejs-service.
+Now you can use service with auto test - "npm test" or with swagger on address http://localhost:4000/api/.
+2
+Postgres:
+Download image elem/nodejs-service-postgres.
+Run command: docker run -e POSTGRES_PASSWORD=password  -p 4040:4000 elem/nodejs-service-postgres
+
+Use with docker compose:
+
+Run command: docker-compose up.
+Now both services are running.
+
+
+
