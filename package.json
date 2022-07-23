@@ -19,7 +19,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "start:test": "node dist/main & npm test"
+    "start:test": "node dist/main & npm test",
+    "scan": "auditjs ossi"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -52,6 +53,7 @@
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "auditjs": "^4.0.37",
     "cross-env": "^7.0.3",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",

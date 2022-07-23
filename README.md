@@ -139,4 +139,6 @@ To connect you container with bright: docker network connect my-net [CONTAINER-I
 To disconnect you container from bridge: docker network disconnect my-net [CONTAINER-ID]
 To remove bridge: docker network rm my-net
 
+To scan image for security vulnerabilities: npm run scan
+
 
