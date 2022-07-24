@@ -21,9 +21,9 @@ export class UserController {
     }
 
     @Post()
-    create(@Body() createUserDto: CreateUserDto): SafeUserDto | number {
-       const result: SafeUserDto | number = this.userService.create(createUserDto);  
-       if (result === 400) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    async create(@Body() createUserDto: CreateUserDto) {
+       const result = this.userService.create(createUserDto);  
+    //    if (result === 400) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
        if(result) return result;       
     }
 

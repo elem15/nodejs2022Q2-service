@@ -3,6 +3,6 @@ export interface SafeUserDto {
     id: string;  
     login: string; 
     version: number;
-    createdAt: number;
+    createdat: number;
     updatedAt: number;
   }

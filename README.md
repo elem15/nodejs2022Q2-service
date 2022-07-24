@@ -109,37 +109,41 @@ Part 2
 
 Install Docker
 
-Use separate app & database:
-1
-Node app:
-Download image: docker pull elem15ten/nodejs-service:latest
-Run command to create volumes: docker volume create db-data
-                                docker volume create db-logs
-Run command: docker run -p 4000:4000  -v db-data:/database -v db-log:/database-logs elem15ten/nodejs-service npm run start:dev
-Now you can use service with auto test - "npm test" or with swagger on address http://localhost:4000/api/
-2
-Postgres:
-Create database image: docker build ./database -t elem/nodejs-service-postgres
-Run command: docker run -e POSTGRES_PASSWORD=password  -p 4040:4000 elem15ten/nodejs-service-postgres
+Use separate app & database:__
+1__
+Node app:__
+Download image: docker pull elem15ten/nodejs-service:latest__
+Run command to create volumes: docker volume create db-data__
+                                docker volume create db-logs__
+Run command: docker run -p 4000:4000  -v db-data:/database -v db-log:/database-logs elem15ten/nodejs-service npm run start:dev__
+Now you can use service with auto test - "npm test" or with swagger on address http://localhost:4000/api/__
+2__
+Postgres:__
+Create database image: docker build ./database -t elem/nodejs-service-postgres__
+Run command: docker run -e POSTGRES_PASSWORD=postgres  -p 4040:4000 elem15ten/nodejs-service-postgres__
 
-Use with docker compose:
+Use with docker compose:__
 
-Run command: docker-compose up --build
-Now both services are running.
+Run command: docker-compose up --build__
+Now both services are running.__
 
-To scan images for security vulnerabilities:
-Check version with: docker scan --accept-license --version
-Auth in docker hub with VS code extension 
-Login in terminal: docker login -u username
-password: Enter you docker password
-Scan image: docker scan --file Dockerfile docker-scan:e2e 
+To scan images for security vulnerabilities:__
+Check version with: docker scan --accept-license --version__
+Auth in docker hub with VS code extension __
+Login in terminal: docker login -u username__
+password: Enter you docker password__
+Scan image: docker scan --file Dockerfile docker-scan:e2e __
 
-To create your bridge run: docker network create my-net
-Run image docker-compose up 
-To connect you container with bright: docker network connect my-net [CONTAINER-ID] (get container id with command: docker ps)
-To disconnect you container from bridge: docker network disconnect my-net [CONTAINER-ID]
-To remove bridge: docker network rm my-net
+To create your bridge run: docker network create my-net__
+Run image docker-compose up __
+To connect you container with bridge: docker network connect my-net [CONTAINER-ID] (get container id with command: docker ps)__
+To disconnect you container from bridge: docker network disconnect my-net [CONTAINER-ID]__
+To remove bridge: docker network rm my-net__
 
-To scan image for security vulnerabilities: npm run scan
+To scan image for security vulnerabilities: npm run scan__
+
+____________________________________________
+
+
 
 
