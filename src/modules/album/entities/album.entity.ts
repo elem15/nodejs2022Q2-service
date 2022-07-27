@@ -11,7 +11,7 @@ export class AlbumEntity {
     @Column()
     year: number;
 
-    @Column()
+    @Column('uuid')
     artistid: string;
 
     toResponse() {

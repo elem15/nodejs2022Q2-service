@@ -23,6 +23,8 @@ db:
 \dt - existed tables\
 postgres=# CREATE TABLE users(id varchar(255), login varchar(255), version int, createdAt bigint, updatedAt bigint, password varchar(255));
 postgres=# CREATE TABLE albums(id varchar(255), name varchar(255), year int, artistid varchar(255));
+postgres=# CREATE TABLE artists(id varchar(255), name varchar(255), grammy boolean);
+INSERT INTO artists (id, name, grammy) VALUES ('123j', 'John', true);
 ALTER TABLE users ADD COLUMN password varchar(255);
 ALTER TABLE albums ADD COLUMN aritstid varchar(255);
 
