@@ -13,7 +13,7 @@ export class UserDto {
     @ApiProperty({ example: '123P', description: 'Password of the user'})
     @IsNotEmpty({ message: 'The user password cannot be empty'})
     @IsString({ message: 'The user password must be string'})
-    password: string;
+    password?: string;
 
     version?: number;
     createdat?: number;
