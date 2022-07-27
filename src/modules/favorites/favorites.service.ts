@@ -57,11 +57,11 @@ export class FavoritesService {
         if (idx !== -1) favorites.tracks.splice(idx, 1);
     }
 
-    addAlbumToFavorites(id: string): UpdateAlbumDto | -1 {
+    async addAlbumToFavorites(id: string) {
         if (!validate(id)) throw new BadRequestException('Invalid UUID');
         // if (albums.findIndex((i) => i.id === id) === -1)
         //     throw new UnprocessableEntityException();
-        const album = this.albumService.getById(id);
+        const album = await this.albumService.getById(id);
         favorites.albums.push(id);
         return album;
     }

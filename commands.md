@@ -22,7 +22,9 @@ db:
 \connect base-name
 \dt - existed tables\
 postgres=# CREATE TABLE users(id varchar(255), login varchar(255), version int, createdAt bigint, updatedAt bigint, password varchar(255));
+postgres=# CREATE TABLE albums(id varchar(255), name varchar(255), year int, artistid varchar(255));
 ALTER TABLE users ADD COLUMN password varchar(255);
+ALTER TABLE albums ADD COLUMN aritstid varchar(255);
 
 if old nestjs
   npm i --legacy-peer-deps @nestjs/typeorm typeorm pg
