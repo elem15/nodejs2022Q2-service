@@ -8,7 +8,6 @@ networks:
     name: rest-service-network
     driver: bridge
 
-
 services:
   postgres:
     container_name: nodejs2022q2-service_postgres

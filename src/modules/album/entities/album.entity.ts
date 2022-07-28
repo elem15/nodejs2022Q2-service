@@ -12,7 +12,7 @@ export class AlbumEntity {
     year: number;
 
     @Column('uuid')
-    artistid: string;
+    artistid?: string;
 
     toResponse() {
         const { id, name, year, artistid } = this;

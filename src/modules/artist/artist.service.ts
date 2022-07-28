@@ -12,12 +12,10 @@ import { v4 as uuidv4, validate } from 'uuid';
 import { UpdateArtistDto } from "./dto/update-artist.dto";
 import { FavoritesService } from '../favorites/favorites.service';
 import { TrackService } from '../track/track.service';
-import data from '../../data';
 import { AlbumService } from '../album/album.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArtistEntity } from './entities/artist.entity';
 import { Repository } from 'typeorm';
-let { artists } = data;
 
 @Injectable()
 export class ArtistService {
@@ -74,8 +72,8 @@ export class ArtistService {
         const result = await this.artistRepository.delete(id);
         if(result.affected === 0) throw new HttpException('Not found', HttpStatus.NOT_FOUND);  
         await this.favoritesService.deleteArtistFromFavorites(id);
-        this.albumService.deleteArtistFromAlbums(id);
-        this.trackService.deleteArtistFromTracks(id);
+        await this.albumService.deleteArtistFromAlbums(id);
+        await this.trackService.deleteArtistFromTracks(id);
         return 'deleted';
     }
 }

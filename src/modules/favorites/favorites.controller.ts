@@ -23,7 +23,7 @@ import {
     }
   
     @Post('/track/:id')
-    addTrackToFavorites(@Param('id') id): UpdateTrackDto | -1 {
+    addTrackToFavorites(@Param('id') id) {
       return this.favoritesService.addTrackToFavorites(id);
     }
     @Delete('/track/:id')

@@ -8,6 +8,7 @@ import { FavoritesService } from "../favorites/favorites.service";
 import { TrackService } from "../track/track.service";
 import data from '../../data';
 import { AlbumEntity } from "./entities/album.entity";
+import { ArtistService } from "../artist/artist.service";
 let { albums } = data;
 
 @Injectable()
@@ -17,6 +18,8 @@ export class AlbumService {
         private readonly favoritesService: FavoritesService,
         @Inject(forwardRef(() => TrackService))
         private readonly trackService: TrackService,
+        @Inject(forwardRef(() => ArtistService))
+        private readonly artistService: ArtistService,
         @InjectRepository(AlbumEntity)
         private albumRepository: Repository<AlbumEntity>
     ) { }
@@ -67,8 +70,11 @@ export class AlbumService {
         return 'deleted';
     }
 
-    deleteArtistFromAlbums(id: string) {
-        for (const album of albums)
-            if (album.artistId === id) album.artistId = null;
-    }
+    async deleteArtistFromAlbums(artistid: string) {
+        const album = await this.albumRepository.findOne({ where: { artistid } });
+        if (album) {            
+            const changedAlbum = { ...album, artistid: null };
+            await this.albumRepository.save(changedAlbum);
+        }
+    } 
 }
