@@ -54,8 +54,7 @@ export class AlbumService {
             changedAlbum.artistid = albumDto.artistId;
             await this.albumRepository.save(changedAlbum);
             return (await this.albumRepository.findOne({ where: { id } })).toResponse();
-        }        
-   
+        }   
         return null;
     }
 
