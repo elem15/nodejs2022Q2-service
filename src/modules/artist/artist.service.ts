@@ -38,8 +38,7 @@ export class ArtistService {
     async getById(id: string) {
         if (!validate(id)) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         const artist = await this.artistRepository.findOne({ where: { id } });
-        if (artist) return artist.toResponse();
-        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+        if (artist) return artist.toResponse();        
     }
 
     async create(artistDto: CreateArtistDto) {

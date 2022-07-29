@@ -32,7 +32,6 @@ export class AlbumService {
         if (!validate(id)) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         const album = await this.albumRepository.findOne({ where: { id } });
         if (album) return album.toResponse();
-        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
 
     async create(albumDto: CreateAlbumDto) {

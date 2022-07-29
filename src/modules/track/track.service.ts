@@ -43,7 +43,6 @@ export class TrackService {
         if (!validate(id)) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         const track = await this.trackRepository.findOne({ where: { id } });
         if (track) return track.toResponse();
-        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
 
     async create(trackDto: CreateTrackDto) {
@@ -78,7 +77,7 @@ export class TrackService {
         if (!validate(id)) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         const result = await this.trackRepository.delete(id);
         if(result.affected === 0) throw new HttpException('Not found', HttpStatus.NOT_FOUND);  
-        await this.favoritesService.deleteArtistFromFavorites(id);
+        await this.favoritesService.deleteTrackFromFavorites(id);
         return 'deleted';
     }
 

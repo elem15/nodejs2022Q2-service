@@ -1,6 +1,8 @@
 import {
     BadRequestException,
     forwardRef,
+    HttpException,
+    HttpStatus,
     Inject,
     Injectable,
     NotFoundException,
@@ -28,26 +30,26 @@ export class FavoritesService {
         private readonly artistService: ArtistService,
     ) {}
 
-
     async getAll(): Promise<FavoritesResponseDto> {
         const tracks = await Promise.all(
-            favorites.tracks.map(async (i) => this.trackService.getById(i)),
+            favorites.tracks.map(async (i) => await this.trackService.getById(i)),
         );
         const albums = await Promise.all(
-            favorites.albums.map(async (i) => this.albumService.getById(i)),
+            favorites.albums.map(async (i) => await this.albumService.getById(i)),
         );
         const artists = await Promise.all(
-            favorites.artists.map(async (i) => this.artistService.getById(i)),
+            favorites.artists.map(async (i) => await this.artistService.getById(i)),
         );
         return { albums, artists, tracks };
     }
-    addTrackToFavorites(id: string) {
+    async addTrackToFavorites(id: string) {
         if (!validate(id)) throw new BadRequestException('Invalid UUID');
         // if (tracks.findIndex((i) => i.id === id) === -1)
         //     throw new UnprocessableEntityException();
-        const track = this.trackService.getById(id);
-        favorites.tracks.push(id);
+        const track = await this.trackService.getById(id);
+        if(!track) throw new HttpException('The track does not exist', HttpStatus.UNPROCESSABLE_ENTITY);
 
+        favorites.tracks.push(id);
         return track;
     }
     deleteTrackFromFavorites(id: string) {
@@ -62,6 +64,7 @@ export class FavoritesService {
         // if (albums.findIndex((i) => i.id === id) === -1)
         //     throw new UnprocessableEntityException();
         const album = await this.albumService.getById(id);
+        if(!album) throw new HttpException('The album does not exist', HttpStatus.UNPROCESSABLE_ENTITY);
         favorites.albums.push(id);
         return album;
     }
@@ -76,8 +79,9 @@ export class FavoritesService {
         if (!validate(id)) throw new BadRequestException('Invalid UUID');
         // if (artists.findIndex((i) => i.id === id) === -1)
         const artist = await this.artistService.getById(id);
+        if(!artist) throw new HttpException('The artist does not exist', HttpStatus.UNPROCESSABLE_ENTITY);
+        // if(artist.id !== id) throw new UnprocessableEntityException();
         favorites.artists.push(id);
-        //     throw new UnprocessableEntityException();
         // const artistsEmpty = artists.filter(artist => artist.id !== id); 
         // if(artistsEmpty.length === artists.length) throw new UnprocessableEntityException();
         return artist;

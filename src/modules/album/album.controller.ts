@@ -16,7 +16,8 @@ export class AlbumController {
     @HttpCode(HttpStatus.OK)
     async getById(@Param('id') id: string) {
         const result = await this.albumService.getById(id);
-        if(result) return result;        
+        if(result) return result;  
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND);      
     }
 
     @Post()

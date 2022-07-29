@@ -18,6 +18,7 @@ export class TrackController {
     async getById(@Param('id') id: string) {
         const result = await this.trackService.getById(id);
         if(result) return result;
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
 
     @Post()

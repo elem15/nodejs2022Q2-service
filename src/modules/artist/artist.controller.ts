@@ -18,6 +18,7 @@ export class ArtistController {
     async getById(@Param('id') id: string) {
         const result = await this.artistService.getById(id);        
         if(result) return result;
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
 
     @Post()
