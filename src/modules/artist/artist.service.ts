@@ -36,7 +36,7 @@ export class ArtistService {
     }
 
     async getById(id: string) {
-        if (!validate(id)) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+        if (!validate(id)) throw new BadRequestException('Invalid UUID');
         const artist = await this.artistRepository.findOne({ where: { id } });
         if (artist) return artist.toResponse();        
     }

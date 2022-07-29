@@ -5,33 +5,14 @@ import { readFile } from 'fs/promises';
 import { SwaggerModule } from '@nestjs/swagger';
 import { parse } from 'yaml';
 // import { ValidationPipe } from '@nestjs/common';
-const Pool = require('pg').Pool;
-const pool = new Pool({
-    user: 'postgres',
-    password: 'postgres',
-    // host: 'postgres', // docker bridge
-    host: process.env.POSTGRES_HOST as string, //local
-    port: 5432,
-    database: 'postgres',
-});
+import { createTables } from './create-tables'
 
 import 'dotenv/config';
 
 const PORT = process.env.PORT || 4000;
 
-const createTable = async() => {
-
-  await pool.query(
-        `CREATE TABLE IF NOT EXISTS users(id varchar(255), login varchar(255), version int, createdAt bigint, updatedAt bigint, password varchar(255));
-        CREATE TABLE IF NOT EXISTS albums(id varchar(255), name varchar(255), year int, artistid varchar(255));
-        CREATE TABLE IF NOT EXISTS artists(id varchar(255), name varchar(255), grammy boolean);
-        CREATE TABLE IF NOT EXISTS tracks(id varchar(255), name varchar(255), artistid varchar(255), albumid varchar(255), duration int);
-        ;`
-  )
-}
-
 async function bootstrap() {
-  await createTable();
+  await createTables();
   const app = await NestFactory.create(AppModule);
   // app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 

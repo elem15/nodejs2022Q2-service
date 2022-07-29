@@ -1,4 +1,4 @@
-import { Injectable, HttpCode, HttpException, HttpStatus, forwardRef, Inject } from "@nestjs/common"
+import { Injectable, HttpCode, HttpException, HttpStatus, forwardRef, Inject, BadRequestException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { v4 as uuidv4, validate } from 'uuid';
@@ -29,7 +29,7 @@ export class AlbumService {
         return await albums.map((album) => album.toResponse());
     }
     async getById(id: string): Promise<CreateAlbumDto | number> {
-        if (!validate(id)) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+        if (!validate(id)) throw new BadRequestException('Invalid UUID');
         const album = await this.albumRepository.findOne({ where: { id } });
         if (album) return album.toResponse();
     }

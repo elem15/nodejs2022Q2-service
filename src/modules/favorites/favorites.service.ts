@@ -17,7 +17,10 @@ import { ArtistService } from '../artist/artist.service';
 import { TrackService } from '../track/track.service';
 import { FavoritesResponseDto } from './dto/favorites-response.dto';
 import data from '../../data';
-const { albums, tracks, artists, favorites } = data;
+import { InjectRepository } from '@nestjs/typeorm';
+import { AlbumIdEntity, ArtistIdEntity, TrackIdEntity } from './entities/favorites.entity';
+import { Repository } from 'typeorm';
+const { favorites } = data;
 
 @Injectable()
 export class FavoritesService {
@@ -28,70 +31,63 @@ export class FavoritesService {
         private readonly trackService: TrackService,
         @Inject(forwardRef(() => ArtistService))
         private readonly artistService: ArtistService,
+        @InjectRepository(AlbumIdEntity)
+        private albumIdEntityRepository: Repository<AlbumIdEntity>,
+        @InjectRepository(ArtistIdEntity)
+        private artistIdEntityRepository: Repository<ArtistIdEntity>,
+        @InjectRepository(TrackIdEntity)
+        private trackIdEntityRepository: Repository<TrackIdEntity>,
     ) {}
 
     async getAll(): Promise<FavoritesResponseDto> {
+    
+        const trackIds = await this.trackIdEntityRepository.find();
         const tracks = await Promise.all(
-            favorites.tracks.map(async (i) => await this.trackService.getById(i)),
+            trackIds.map(async ({ id }) => await this.trackService.getById(id))
         );
+        const albumsIds = await this.albumIdEntityRepository.find();
         const albums = await Promise.all(
-            favorites.albums.map(async (i) => await this.albumService.getById(i)),
+            albumsIds.map(async ({ id }) => await this.albumService.getById(id))
         );
+        const artistsIds = await this.artistIdEntityRepository.find();
         const artists = await Promise.all(
-            favorites.artists.map(async (i) => await this.artistService.getById(i)),
-        );
+            artistsIds.map(async ({ id }) => await this.artistService.getById(id))
+        );      
         return { albums, artists, tracks };
     }
-    async addTrackToFavorites(id: string) {
-        if (!validate(id)) throw new BadRequestException('Invalid UUID');
-        // if (tracks.findIndex((i) => i.id === id) === -1)
-        //     throw new UnprocessableEntityException();
+    async addTrackToFavorites(id: string) {        
         const track = await this.trackService.getById(id);
         if(!track) throw new HttpException('The track does not exist', HttpStatus.UNPROCESSABLE_ENTITY);
-
-        favorites.tracks.push(id);
+        const createdTrackId = await this.trackIdEntityRepository.create({ id });
+        await this.trackIdEntityRepository.save(createdTrackId);
         return track;
     }
-    deleteTrackFromFavorites(id: string) {
+    async deleteTrackFromFavorites(id: string) {
         if (!validate(id)) throw new BadRequestException('Invalid UUID');
-        const idx = favorites.tracks.findIndex((i) => i == id);
-        // if (idx === -1) throw new NotFoundException();
-        if (idx !== -1) favorites.tracks.splice(idx, 1);
+        await this.trackIdEntityRepository.delete(id);
     }
 
     async addAlbumToFavorites(id: string) {
-        if (!validate(id)) throw new BadRequestException('Invalid UUID');
-        // if (albums.findIndex((i) => i.id === id) === -1)
-        //     throw new UnprocessableEntityException();
         const album = await this.albumService.getById(id);
-        if(!album) throw new HttpException('The album does not exist', HttpStatus.UNPROCESSABLE_ENTITY);
-        favorites.albums.push(id);
+        if(!album) throw new UnprocessableEntityException('The album does not exist');
+        const createdAlbumId = await this.albumIdEntityRepository.create({ id });
+        await this.albumIdEntityRepository.save(createdAlbumId);
         return album;
     }
-    deleteAlbumFromFavorites(id: string) {
+    async deleteAlbumFromFavorites(id: string) {
         if (!validate(id)) throw new BadRequestException('Invalid UUID');
-        const idx = favorites.albums.findIndex((i) => i == id);
-        // if (idx === -1) throw new NotFoundException();
-        if (idx !== -1) favorites.albums.splice(idx, 1);
+        await this.albumIdEntityRepository.delete(id);
     }
 
     async addArtistToFavorites(id: string): Promise<CreateArtistDto | -1> {
-        if (!validate(id)) throw new BadRequestException('Invalid UUID');
-        // if (artists.findIndex((i) => i.id === id) === -1)
         const artist = await this.artistService.getById(id);
-        if(!artist) throw new HttpException('The artist does not exist', HttpStatus.UNPROCESSABLE_ENTITY);
-        // if(artist.id !== id) throw new UnprocessableEntityException();
-        favorites.artists.push(id);
-        // const artistsEmpty = artists.filter(artist => artist.id !== id); 
-        // if(artistsEmpty.length === artists.length) throw new UnprocessableEntityException();
+        if(!artist) throw new UnprocessableEntityException('The artist does not exist');
+        const createdArtistId = await this.artistIdEntityRepository.create({ id });
+        await this.artistIdEntityRepository.save(createdArtistId);
         return artist;
     }
     async deleteArtistFromFavorites(id: string) {
         if (!validate(id)) throw new BadRequestException('Invalid UUID');
-        const idx = favorites.artists.findIndex((i) => i == id);
-        // if (idx === -1) throw new NotFoundException();
-        // if (idx !== -1) 
-        await favorites.artists.splice(idx, 1);
-        // else throw new NotFoundException();
+        await this.artistIdEntityRepository.delete(id);
     }
 }

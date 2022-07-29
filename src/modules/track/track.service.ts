@@ -40,7 +40,7 @@ export class TrackService {
     }
 
     async getById(id: string) {
-        if (!validate(id)) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+        if (!validate(id)) throw new BadRequestException('Invalid UUID');
         const track = await this.trackRepository.findOne({ where: { id } });
         if (track) return track.toResponse();
     }
