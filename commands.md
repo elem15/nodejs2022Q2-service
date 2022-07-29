@@ -14,9 +14,11 @@ docker exec -it [container-id] bash
 docker-compose up --build
 docker network create my-net
 docker network rm my-net
- docker commit 82c9ab69e168 nodejs2022q2-service_postgres
+docker commit 82c9ab69e168 nodejs2022q2-service_postgres
 docker tag nodejs2022q2-service_node elem15ten/nodejs-service
 docker push elem15ten/nodejs-service
+docker tag nodejs2022q2-service_postgres elem15ten/postgres-service
+docker push elem15ten/postgres-service
 
 db:
 psql -U postgres

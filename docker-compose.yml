@@ -11,7 +11,8 @@ networks:
 services:
   postgres:
     container_name: nodejs2022q2-service_postgres
-    image: nodejs2022q2-service_postgres
+    # image: nodejs2022q2-service_postgres
+    image: elem15ten/postgres-service
     build: 
       dockerfile: ./database/Dockerfile
       context: .
@@ -30,7 +31,8 @@ services:
 
   node:
     container_name: nodejs2022q2-service_node
-    image: nodejs2022q2-service_node
+    # image: nodejs2022q2-service_node
+    image: elem15ten/nodejs-service
     build:
       dockerfile: Dockerfile
       context: .

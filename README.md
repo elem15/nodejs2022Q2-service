@@ -101,7 +101,7 @@ PUT to localhost:3000/user/id with body:
     "newPassword": "54321"
 }
 
-Enjoy this program!
+Enjoy this part of the program!
 _____________________________
 Part 2
 
@@ -109,41 +109,156 @@ Part 2
 
 Install Docker
 
-Use separate app & database:__
-1__
-Node app:__
-Download image: docker pull elem15ten/nodejs-service:latest__
-Run command to create volumes: docker volume create db-data__
-                                docker volume create db-logs__
-Run command: docker run -p 4000:4000  -v db-data:/database -v db-log:/database-logs elem15ten/nodejs-service npm run start:dev__
-Now you can use service with auto test - "npm test" or with swagger on address http://localhost:4000/api/__
-2__
-Postgres:__
-Create database image: docker build ./database -t elem/nodejs-service-postgres__
-Run command: docker run -e POSTGRES_PASSWORD=postgres  -p 4040:4000 elem15ten/nodejs-service-postgres__
+Use separate app & database:    
 
-Use with docker compose:__
+1   
 
-Run command: docker-compose up --build__
-Now both services are running.__
+Node app:   
 
-To scan images for security vulnerabilities:__
-Check version with: docker scan --accept-license --version__
-Auth in docker hub with VS code extension __
-Login in terminal: docker login -u username__
-password: Enter you docker password__
-Scan image: docker scan --file Dockerfile docker-scan:e2e __
+Download image: docker pull elem15ten/nodejs-service:latest 
 
-To create your bridge run: docker network create my-net__
-Run image docker-compose up __
-To connect you container with bridge: docker network connect my-net [CONTAINER-ID] (get container id with command: docker ps)__
-To disconnect you container from bridge: docker network disconnect my-net [CONTAINER-ID]__
-To remove bridge: docker network rm my-net__
+Run command to create volumes: docker volume create db-data 
 
-To scan image for security vulnerabilities: npm run scan__
+                                docker volume create db-logs    
 
-____________________________________________
+Run command: docker run -p 4000:4000  -v db-data:/database -v db-log:/database-logs elem15ten/nodejs-service npm run start:dev  
+
+Now you can use service with auto test - "npm test" or with swagger on address http://localhost:4000/api/   
+
+2   
+
+Postgres:   
+
+Create database image: docker build ./database -t elem/nodejs-service-postgres  
+
+Run command: docker run -e POSTGRES_PASSWORD=postgres  -p 4040:4000 elem15ten/nodejs-service-postgres   
 
 
+Use with docker compose:    
+
+
+Run command: docker-compose up --build  
+
+Now both services are running.  
+
+
+To scan images for security vulnerabilities:    
+
+Check version with: docker scan --accept-license --version  
+
+Auth in docker hub with VS code extension   
+
+Login in terminal: docker login -u username 
+
+password: Enter you docker password 
+
+Scan image: docker scan --file Dockerfile docker-scan:e2e   
+
+
+To create your bridge run: docker network create my-net 
+
+Run image docker-compose up     
+
+To connect you container with bridge: docker network connect my-net [CONTAINER-ID] (get container id with command: docker ps)   
+
+To disconnect you container from bridge: docker network disconnect my-net [CONTAINER-ID]    
+
+To remove bridge: docker network rm my-net  
+
+
+To scan image for security vulnerabilities: npm run scan    
+________________________________________
+
+Part 3
+
+Now you can start to use this app and get all entities from data base Postres. 
+
+To local use download repo:
+
+git clone https://github.com/elem15/nodejs2022Q2-service.git
+
+cd nodejs2022Q2-service
+
+git checkout part-3
+
+create empty folder /pgdata for database volumes.
+
+npm i
+
+make sure:
+    the file ormconfig.ts contains: 
+
+    // host: "postgres", //docker bridge
+
+    host: process.env.POSTGRES_HOST as string, //local
+
+    the file src/create-tables contains: 
+
+    // host: 'postgres', // docker bridge
+
+    host: process.env.POSTGRES_HOST as string, //local
+
+    local data base started on port 5432.
+
+npm run start:dev
+
+npm run test - auto test
+
+http://localhost:4000/api/ - test with swagger.
+
+
+You also can use Docker.
+
+Install Docker local
+
+docker pull elem15ten/nodejs-service:latest 
+
+docker pull elem15ten/postgres-service:latest 
+
+
+make sure:
+
+    the file docker-compose.yml contains:
+
+    make sure the file contains: 
+
+            # image: nodejs2022q2-service_postgres
+
+            image: elem15ten/postgres-service
+
+        and 
+
+            # image: nodejs2022q2-service_node
+
+            image: elem15ten/nodejs-service    
+
+
+docker-compose up 
+ 
+or if you don't want to pull images from docker hub:
+
+make sure:
+
+    the file ormconfig.ts contains: 
+
+    host: "postgres", //docker bridge
+
+    // host: process.env.POSTGRES_HOST as string, //local
+
+    the file src/create-tables contains: 
+
+    host: 'postgres', // docker bridge
+
+    // host: process.env.POSTGRES_HOST as string, //local
+
+docker-compose up --build 
+
+npm run test - auto test
+
+http://localhost:4000/api/ - test with swagger.
+
+______________________________________________________
+
+Enjoy this great program ;)
 
 

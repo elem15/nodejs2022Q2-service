@@ -5,7 +5,6 @@ import {
     HttpStatus,
     Inject,
     Injectable,
-    NotFoundException,
     UnprocessableEntityException,
 } from '@nestjs/common';
 import { v4 as uuidv4, validate } from 'uuid';
@@ -16,11 +15,9 @@ import { AlbumService } from '../album/album.service';
 import { ArtistService } from '../artist/artist.service';
 import { TrackService } from '../track/track.service';
 import { FavoritesResponseDto } from './dto/favorites-response.dto';
-import data from '../../data';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AlbumIdEntity, ArtistIdEntity, TrackIdEntity } from './entities/favorites.entity';
 import { Repository } from 'typeorm';
-const { favorites } = data;
 
 @Injectable()
 export class FavoritesService {
@@ -39,8 +36,7 @@ export class FavoritesService {
         private trackIdEntityRepository: Repository<TrackIdEntity>,
     ) {}
 
-    async getAll(): Promise<FavoritesResponseDto> {
-    
+    async getAll(): Promise<FavoritesResponseDto> {    
         const trackIds = await this.trackIdEntityRepository.find();
         const tracks = await Promise.all(
             trackIds.map(async ({ id }) => await this.trackService.getById(id))

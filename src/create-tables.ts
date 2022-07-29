@@ -4,8 +4,8 @@ const { Pool } = pg;
 const pool = new Pool({
     user: 'postgres',
     password: 'postgres',
-    // host: 'postgres', // docker bridge
-    host: process.env.POSTGRES_HOST as string, //local
+    host: 'postgres', // docker bridge
+    // host: process.env.POSTGRES_HOST as string, //local
     port: 5432,
     database: 'postgres',
 });
