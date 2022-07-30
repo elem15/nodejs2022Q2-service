@@ -257,7 +257,25 @@ npm run test - auto test
 
 http://localhost:4000/api/ - test with swagger.
 
-______________________________________________________
+Migrations
+
+To use migrations change file ormconfig.ts.
+
+synchronize: true,
+
+Now you can change entity files, add or remove columns and DB will updated.
+
+But in this mode many auto-tests will fail with 500 error.
+
+To restore tests work you need:
+
+synchronize: false,
+
+manually drop all tables in psql terminal  with command *** from file COMMANDS.md.
+
+
+
+_____________________________________________________
 
 Enjoy this great program ;)
 

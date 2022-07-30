@@ -6,10 +6,10 @@ export class TrackEntity {
     id?: string;
 
     @Column()
-    name: string;
+    name?: string;
 
     @Column()
-    duration: number;
+    duration?: number;
 
     @Column()
     artistid?: string;
