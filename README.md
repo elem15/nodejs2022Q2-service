@@ -232,19 +232,23 @@ or if you can't to pull images from docker hub:
 
 make sure:
 
+    you are logged in Docker account(docker login)
+
     the file ormconfig.ts contains: 
 
-    host: "postgres", //docker bridge
+        host: "postgres", //docker bridge
 
-    // host: process.env.POSTGRES_HOST as string, //local
+        // host: process.env.POSTGRES_HOST as string, //local
 
     the file src/create-tables contains: 
 
-    host: 'postgres', // docker bridge
+        host: 'postgres', // docker bridge
 
-    // host: process.env.POSTGRES_HOST as string, //local
+        // host: process.env.POSTGRES_HOST as string, //local
 
-docker-compose up --build 
+docker build . -t elem15ten/nodejs-service
+
+docker-compose up
 
 to start auto test: 
 
@@ -253,6 +257,9 @@ npm run test
 to test with swagger:
 
 http://localhost:4000/api/ 
+
+If you change any files in App, Docker will restart.
+
 
 Migrations
 
