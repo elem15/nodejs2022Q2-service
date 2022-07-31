@@ -101,8 +101,7 @@ PUT to localhost:3000/user/id with body:
     "newPassword": "54321"
 }
 
-Enjoy this part of the program!
-_____________________________
+____________________________
 Part 2
 
 #Use with Docker
@@ -129,9 +128,9 @@ Now you can use service with auto test - "npm test" or with swagger on address h
 
 Postgres:   
 
-Create database image: docker build ./database -t elem/nodejs-service-postgres  
+Create database image: docker build ./database -t elem15ten/postgres-service
 
-Run command: docker run -e POSTGRES_PASSWORD=postgres  -p 4040:4000 elem15ten/nodejs-service-postgres   
+Run command: docker run -e POSTGRES_PASSWORD=postgres  -p 4040:4000 elem15ten/nodejs-service
 
 
 Use with docker compose:    
@@ -155,9 +154,13 @@ password: Enter you docker password
 Scan image: docker scan --file Dockerfile docker-scan:e2e   
 
 
-To create your bridge run: docker network create my-net 
+To create your bridge run: 
 
-Run image docker-compose up     
+docker network create my-net 
+
+Run image:
+
+docker-compose up     
 
 To connect you container with bridge: docker network connect my-net [CONTAINER-ID] (get container id with command: docker ps)   
 
@@ -171,7 +174,9 @@ ________________________________________
 
 Part 3
 
-Now you can start to use this app and get all entities from data base Postres. 
+# Postgres + TypeRM
+
+Now you can start to use this app and get all entities from data base Postgres. 
 
 To local use download repo:
 
@@ -200,6 +205,10 @@ make sure:
 
     local data base started on port 5432.
 
+    if you previously test other app, please manually clear you data base.
+
+    manually drop all tables in psql terminal with command *** from file COMMANDS.md.
+
 npm run start:dev
 
 npm run test - auto test
@@ -213,29 +222,13 @@ Install Docker local
 
 docker pull elem15ten/nodejs-service:latest 
 
+sorry, this may not work, because according to the condition of the assignment, the repository is private
+
 docker pull elem15ten/postgres-service:latest 
-
-
-make sure:
-
-    the file docker-compose.yml contains:
-
-    make sure the file contains: 
-
-            # image: nodejs2022q2-service_postgres
-
-            image: elem15ten/postgres-service
-
-        and 
-
-            # image: nodejs2022q2-service_node
-
-            image: elem15ten/nodejs-service    
-
 
 docker-compose up 
  
-or if you don't want to pull images from docker hub:
+or if you can't to pull images from docker hub:
 
 make sure:
 
@@ -253,9 +246,13 @@ make sure:
 
 docker-compose up --build 
 
-npm run test - auto test
+to start auto test: 
 
-http://localhost:4000/api/ - test with swagger.
+npm run test 
+
+to test with swagger:
+
+http://localhost:4000/api/ 
 
 Migrations
 
@@ -271,11 +268,10 @@ To restore tests work you need:
 
 synchronize: false,
 
-manually drop all tables in psql terminal  with command *** from file COMMANDS.md.
-
-
+manually drop all tables in psql terminal with command *** from file COMMANDS.md.
 
 _____________________________________________________
+
 
 Enjoy this great program ;)
 
