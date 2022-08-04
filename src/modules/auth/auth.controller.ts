@@ -13,6 +13,12 @@ export class AuthController {
        const result = this.authService.create(createUserDto);  
        if(result) return result;       
     }
+    
+    @Post('login')
+    async login(@Body() createUserDto: CreateUserDto) {
+       const result = this.authService.login(createUserDto);  
+       if(result) return result;       
+    }
 
     @Put(':id')
     async update(@Body() updatePasswordDto: UpdatePasswordDto, @Param('id') id: string): Promise<SafeUserDto | number> {

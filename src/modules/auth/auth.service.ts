@@ -2,6 +2,7 @@ import { Injectable, HttpStatus, HttpException } from "@nestjs/common"
 import { SafeUserDto } from "./dto/safe-user.dto";
 import { UserDto } from "./dto/user.dto";
 import { v4 as uuidv4, validate } from 'uuid';
+import * as crypto from 'crypto';
 import { UpdatePasswordDto } from "./dto/update-password.dto";
 import { UserEntity } from "./entities/user.entity";
 import { Repository } from "typeorm";
@@ -34,14 +35,24 @@ export class AuthService {
 
     async create(userDto: UserDto) {
         if ((typeof userDto.login !== 'string') || (typeof userDto.password !== 'string')
-        ) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+        ) throw new HttpException('Incorrect input', HttpStatus.BAD_REQUEST);
         const date = Date.now();
-        const user = { ...userDto, id: uuidv4(), 
+        const password = crypto.createHash('md5').update(userDto.password).digest('hex');
+        const user = { ...userDto, id: uuidv4(), password,
             version: 1, createdat: date, updatedat: date 
         };
         const createdUser = await this.userRepository.create(user);
         await this.userRepository.save(createdUser);
         return 'User was successfully created!'
+    }
+
+    async login(userDto: UserDto) {
+        if ((typeof userDto.login !== 'string') || (typeof userDto.password !== 'string')
+        ) throw new HttpException('Incorrect input', HttpStatus.BAD_REQUEST);
+        const password = crypto.createHash('md5').update(userDto.password).digest('hex');
+        const user = await this.userRepository.findOne({ where: {login: userDto.login}});
+        if (user && password === user.password) return 'JWT';
+        throw new HttpException('Login or password are incorrect', HttpStatus.FORBIDDEN);
     }
 
     async update(updatePasswordDto: UpdatePasswordDto, id: string): Promise<SafeUserDto | number> {
