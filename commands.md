@@ -19,7 +19,7 @@ docker run --name habr-pg-13.3 -p 5432:5432 -e POSTGRES_USER=habrpguser -e POSTG
 docker exec -it [container-id] bash
 
 docker-compose up --build
-
+docker-compose down
 docker compose up postgres -d
 
 docker network create my-net
