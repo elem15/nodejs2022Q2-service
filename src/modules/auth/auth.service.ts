@@ -7,12 +7,14 @@ import { UpdatePasswordDto } from "./dto/update-password.dto";
 import { UserEntity } from "./entities/user.entity";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectRepository(UserEntity)
-        private userRepository: Repository<UserEntity>
+        private userRepository: Repository<UserEntity>,
+        private jwtService: JwtService,
     ) { }
 
     createSafeUser(user: UserDto): SafeUserDto {
@@ -49,9 +51,12 @@ export class AuthService {
     async login(userDto: UserDto) {
         if ((typeof userDto.login !== 'string') || (typeof userDto.password !== 'string')
         ) throw new HttpException('Incorrect input', HttpStatus.BAD_REQUEST);
+        const payload = { id: userDto.id, login: userDto.login }
         const password = crypto.createHash('md5').update(userDto.password).digest('hex');
         const user = await this.userRepository.findOne({ where: {login: userDto.login}});
-        if (user && password === user.password) return 'JWT';
+        if (user && password === user.password) return { 
+            accessToken: this.jwtService.sign(payload)
+        };
         throw new HttpException('Login or password are incorrect', HttpStatus.FORBIDDEN);
     }
 
