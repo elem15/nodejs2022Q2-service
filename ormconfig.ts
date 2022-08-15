@@ -5,8 +5,8 @@ const PORT = process.env.POSTGRES_PORT || "5432";
 
 export default {
     type: "postgres",
-    host: "postgres", //docker bridge
-    // host: process.env.POSTGRES_HOST as string, //local
+    // host: "postgres", //docker bridge
+    host: process.env.POSTGRES_HOST as string, //local
     port: parseInt(PORT, 10) as number,
     username: process.env.POSTGRES_USER as string,
     password: process.env.POSTGRES_PASSWORD as string,

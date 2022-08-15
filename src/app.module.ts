@@ -9,9 +9,10 @@ import { TrackModule } from './modules/track/track.module';
 import { UserModule } from './modules/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configService from '../ormconfig';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
-  imports: [ArtistModule, UserModule, TrackModule, AlbumModule, FavoritesModule, 
+  imports: [ArtistModule, UserModule, TrackModule, AlbumModule, FavoritesModule, AuthModule,
     ConfigModule.forRoot({isGlobal: true, envFilePath: '../.env'}),
     TypeOrmModule.forRoot(configService),
   ],
