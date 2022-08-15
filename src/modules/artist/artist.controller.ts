@@ -9,41 +9,35 @@ export class ArtistController {
     constructor(private readonly artistService: ArtistService) {}
 
     @Get()
-    getAll(): CreateArtistDto[] { 
-        return this.artistService.getAll();
+    async getAll() { 
+        return await this.artistService.getAll();
     }
 
     @Get(':id')
     @HttpCode(HttpStatus.OK)
-    getById(@Param('id') id: string): CreateArtistDto | number {
-        const result: CreateArtistDto | number = this.artistService.getById(id);
-        if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    async getById(@Param('id') id: string) {
+        const result = await this.artistService.getById(id);        
         if(result) return result;
         throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    create(@Body() CreateArtistDto: CreateArtistDto) {
-       const result: CreateArtistDto | number = this.artistService.create(CreateArtistDto);  
-       if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    async create(@Body() CreateArtistDto: CreateArtistDto) {
+       const result = this.artistService.create(CreateArtistDto);  
        if(result) return result;       
     }
 
     @Put(':id')
-    update(@Body() UpdateArtistDto: UpdateArtistDto, @Param('id') id: string) {
-        const result: CreateArtistDto | number =  this.artistService.update(UpdateArtistDto, id);
-        if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    async update(@Body() UpdateArtistDto: UpdateArtistDto, @Param('id') id: string) {
+        const result = await this.artistService.update(UpdateArtistDto, id);
         if(result) return result;
-        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
     
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async delete(@Param('id') id: string) {
         const result: string | number = await this.artistService.delete(id);
-        if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         if(result) return result;
-        throw new HttpException('Not found', HttpStatus.NOT_FOUND);    
     }
 }
