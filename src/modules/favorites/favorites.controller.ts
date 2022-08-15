@@ -23,7 +23,7 @@ import {
     }
   
     @Post('/track/:id')
-    addTrackToFavorites(@Param('id') id): UpdateTrackDto | -1 {
+    addTrackToFavorites(@Param('id') id) {
       return this.favoritesService.addTrackToFavorites(id);
     }
     @Delete('/track/:id')
@@ -32,8 +32,8 @@ import {
       await this.favoritesService.deleteTrackFromFavorites(id);
     }
     @Post('/album/:id')
-    addAlbumToFavorites(@Param('id') id): UpdateAlbumDto | -1 {
-      return this.favoritesService.addAlbumToFavorites(id);
+    async addAlbumToFavorites(@Param('id') id) {
+      return await this.favoritesService.addAlbumToFavorites(id);
     }
     @Delete('/album/:id')
     @HttpCode(HttpStatus.NO_CONTENT)

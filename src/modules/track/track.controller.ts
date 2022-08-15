@@ -9,40 +9,35 @@ export class TrackController {
     constructor(private readonly trackService: TrackService) {}
 
     @Get()
-    getAll(): CreateTrackDto[] { 
-        return this.trackService.getAll();
+    async getAll() { 
+        return await this.trackService.getAll();
     }
 
     @Get(':id')
     @HttpCode(HttpStatus.OK)
-    getById(@Param('id') id: string): CreateTrackDto | number {
-        const result: CreateTrackDto | number = this.trackService.getById(id);
-        if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    async getById(@Param('id') id: string) {
+        const result = await this.trackService.getById(id);
         if(result) return result;
         throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    create(@Body() CreateTrackDto: CreateTrackDto) {
-       const result: CreateTrackDto | number = this.trackService.create(CreateTrackDto);  
-       if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    async create(@Body() CreateTrackDto: CreateTrackDto) {
+       const result = await this.trackService.create(CreateTrackDto);  
        if(result) return result;       
     }
 
     @Put(':id')
-    update(@Body()UpdateTrackDto: UpdateTrackDto, @Param('id') id: string) {
-        const result: CreateTrackDto | number =  this.trackService.update(UpdateTrackDto, id);
-        if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    async update(@Body()UpdateTrackDto: UpdateTrackDto, @Param('id') id: string) {
+        const result = await this.trackService.update(UpdateTrackDto, id);
         if(result) return result;
-        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
     
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async delete(@Param('id') id: string) {
         const result: string | number = await this.trackService.delete(id);
-        if (result === -1) throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         if(result) return result;
         throw new HttpException('Not found', HttpStatus.NOT_FOUND);    
     }
